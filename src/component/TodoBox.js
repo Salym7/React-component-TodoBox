@@ -1,4 +1,5 @@
 import {useState} from 'react';
+import { nanoid } from 'nanoid'
 
 
 const TodoBox = () => {
@@ -8,20 +9,18 @@ const TodoBox = () => {
         id: 3
     }])
     const [note, setNote] = useState('')
-    const [currentId, setCurrentId] = useState(4)
 
-    const deleteItem = (event) => {
-        const id = +event.currentTarget.getAttribute('data-id');
+    const deleteItem = (id) => () => {
+
         setData(data.filter(item => item.id !== id))
     }
 
     const onSubmit = (e) => {
+        const id =  nanoid()
         e.preventDefault();
         if (note.length < 3) return;
-        setData((data) => [{value: note, id: currentId}, ...data]);
-        setCurrentId(currentId + 1);
+        setData((data) => [{value: note, id: id}, ...data]);
         setNote('');
-
     }
 
     const onValueChange = (e) => {
@@ -33,8 +32,7 @@ const TodoBox = () => {
             <div className="row m-3">
                 <div className="col-auto">
                     <button type="button" className="btn btn-primary btn-sm"
-                            data-id={item.id}
-                            onClick={deleteItem}>Delete
+                            onClick={deleteItem(item.id)}>Delete
                     </button>
                 </div>
                 <div className="col">{item.value}</div>
